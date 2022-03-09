@@ -14,14 +14,23 @@ const Scoreboard = () => {
     { id: 4, name: "Lisa", score: 42 },
   ]);
 
-  const playersSorted = (players) => {
+  const [sortMethod, setSortMethod] = useState("score");
+
+  const sortedByScore = (players) => {
     const newPLayers = [...players].sort(compare_score);
     setPlayers(newPLayers);
   };
 
+  const sortedByName = (players) => {
+    const arraySortedByName = [...players].sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    setPlayers(arraySortedByName);
+  };
+
   useEffect(() => {
-    playersSorted(players);
-  }, []);
+    sortMethod === "score" ? sortedByScore(players) : sortedByName(players);
+  }, [sortMethod]);
 
   return (
     <div>
@@ -31,6 +40,10 @@ const Scoreboard = () => {
           <Player key={player.id} name={player.name} score={player.score} />
         ))}
       </ul>
+      <select onChange={(e) => setSortMethod(e.target.value)}>
+        <option value="score">score</option>
+        <option value="name">name</option>
+      </select>
       <AddPlayerForm />
     </div>
   );
